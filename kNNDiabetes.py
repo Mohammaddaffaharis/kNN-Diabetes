@@ -16,7 +16,7 @@ def readData():
         col.append(file['Outcome'][i])
         user.append(col)
     return user
-def split(data):
+def spiltSeperlima(data):
     num = round(len(data)/5)
     data1 = []
     data2 = []
@@ -36,11 +36,54 @@ def split(data):
     for i in range(part5 - part4):
         data5.append(data[i + part4])
     return data1, data2, data3, data4, data5
+def splitTrainTest(data):
+    # Dataset 1
+    training = []
+    testing = []
+    for i in range(614):
+        training.append(data[i])
+    for i in range(615, 768):
+        testing.append(data[i])
+    data1 = training, testing
+    # Dataset 2
+    training = []
+    testing = []
+    for i in range(461):
+        training.append(data[i])
+    for i in range(614, 768):
+        training.append(data[i])
+    for i in range(461, 614):
+        testing.append(data[i])
+    data2 = training, testing
+    # Dataset 3
+    training = []
+    testing = []
+    for i in range(307):
+        training.append(data[i])
+    for i in range(461, 768):
+        training.append(data[i])
+    for i in range(307, 461):
+        testing.append(data[i])
+    data3 = training, testing
+    # Dataset 4
+    training = []
+    testing = []
+    for i in range(154):
+        training.append(data[i])
+    for i in range(307, 768):
+        training.append(data[i])
+    for i in range(154, 307):
+        testing.append(data[i])
+    data4 = training, testing
+    # Dataset 5
+    training = []
+    testing = []
+    for i in range(154, 768):
+        training.append(data[i])
+    for i in range(154):
+        testing.append(data[i])
+    data5 = training, testing
+    return data1, data2, data3, data4, data5
 def main():
-    data = readData()
-    datas = split(data)
-    
-
-
-
+    print("Samlekom Dunya")
 main()
