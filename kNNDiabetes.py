@@ -91,12 +91,12 @@ def euclidian(baris1, baris2):
 def getNeighbors(train, testRow, neighborsNum):
     distance = []
     for i in train:
-        x = euclidian(i,testRow)
+        x = euclidian(testRow,i)
         distance.append([i,x])
     distance.sort(key=lambda tup: tup[1])
     neighbors = []
-    for i in range(neighborsNum):
-        neighbors.append(distance[i][0])
+    for j in range(neighborsNum):
+        neighbors.append(distance[j][0])
     return neighbors
 def getClass(neighbors):
     kelas1 = 0
@@ -110,18 +110,28 @@ def getClass(neighbors):
         return 0
     elif (kelas0 < kelas1):
         return 1
-
+def getAccuracy(real, predicted):
+    true = 0
+    for i in range(len(real)):
+        if real[i] == predicted[i]:
+            true = true + 1
+    return (true/float(len(real))) *100
 def main():
     data = readData()
     dataSet = splitTrainTest(data)
-
-    newk = [3,5,7,9,11]
+    newk = [99]
     for k in newk:
         for i in range(len(dataSet)):
+            oldOutput = []
             newOutput = []
+            score = []
             for j in  range(len(dataSet[i][1])):
-                hasil = []
                 nearestNeighbour = getNeighbors(dataSet[i][0],dataSet[i][1][j],k)
                 newOutput.append(getClass(nearestNeighbour))
+                oldOutput.append(dataSet[i][1][j][8])
+            acc = getAccuracy(oldOutput,newOutput)
+            score.append(acc)
+            print(score)
+
 
 main()
