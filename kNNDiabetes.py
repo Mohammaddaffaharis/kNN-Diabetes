@@ -41,7 +41,7 @@ def splitTrainTest(data):
     testing = []
     for i in range(614):
         training.append(data[i])
-    for i in range(615, 768):
+    for i in range(614, 768):
         testing.append(data[i])
     data1 = training, testing
     # Dataset 2
@@ -102,9 +102,9 @@ def getClass(neighbors):
     kelas1 = 0
     kelas0 = 0
     for i in range(len(neighbors)):
-        if (neighbors[0][8] == 1):
+        if (neighbors[i][8] == 1):
             kelas1 = kelas1 + 1
-        elif (neighbors[0][8] == 0):
+        elif (neighbors[i][8] == 0):
             kelas0 = kelas0 + 1
     if (kelas0 > kelas1):
         return 0
@@ -119,8 +119,10 @@ def getAccuracy(real, predicted):
 def main():
     data = readData()
     dataSet = splitTrainTest(data)
-    newk = [99]
+    #best 31 = 75.97402597402598
+    newk = [31git]
     for k in newk:
+        accurate = 0.0
         for i in range(len(dataSet)):
             oldOutput = []
             newOutput = []
@@ -129,9 +131,9 @@ def main():
                 nearestNeighbour = getNeighbors(dataSet[i][0],dataSet[i][1][j],k)
                 newOutput.append(getClass(nearestNeighbour))
                 oldOutput.append(dataSet[i][1][j][8])
-            acc = getAccuracy(oldOutput,newOutput)
-            score.append(acc)
-            print(score)
-
+            accuracy = getAccuracy(oldOutput,newOutput)
+            print("DataSet ke-", i ," dengan K= ", k , " memiliki akurasi sebesar " , accuracy)
+            score.append(accuracy)
+        print("Dengan Rata-Rata acuracy sebesar ", sum(score)/len(score))
 
 main()
