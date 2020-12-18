@@ -153,6 +153,8 @@ def fiveFoldValidation(dataSet,k):
         print("DataSet ke-", i ," dengan K= ", k , " memiliki akurasi sebesar " , accuracy)
         score.append(accuracy)
     return score
+def getAvgAccuracy(score):
+    return sum(score)/len(score)
 #Ultimately Main Function
 def main():
     data = readData()
@@ -161,6 +163,6 @@ def main():
     newk = [31]
     for k in newk:
         score = fiveFoldValidation(dataSet, k)
-        avg = sum(score)/len(score)
+        avg = getAvgAccuracy(score)
         print("Data dengan K =",k, "memiliki Rata-Rata acuracy sebesar", avg)
 main()
