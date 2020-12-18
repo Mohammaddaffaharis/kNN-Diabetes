@@ -18,7 +18,7 @@ def readData():
         col.append(file['Outcome'][i])
         user.append(col)
     return user
-#melakukan preprocessing data (mengubah data yang bernilai nol dengan mean kolom)
+#melakukan preprocessing data (mengubah data yang bernilai nol dengan mean kolom dan juga normalisasi data)
 def preProcess(file):
     meanPregnancies = file['Pregnancies'].mean(skipna=True)
     file['Pregnancies'] = file.Pregnancies.mask(file.Pregnancies == 0, meanPregnancies)
@@ -36,6 +36,15 @@ def preProcess(file):
     file['DiabetesPedigreeFunction'] = file.DiabetesPedigreeFunction.mask(file.DiabetesPedigreeFunction == 0, meanDPF)
     meanAge = file['Age'].mean(skipna=True)
     file['Age'] = file.Age.mask(file.Age == 0, meanAge)
+    #NORMALISASI
+    file['Pregnancies'] = (file['Pregnancies'] - file['Pregnancies'].min()) / (file['Pregnancies'].max() - file['Pregnancies'].min())
+    file['Glucose'] = (file['Glucose'] - file['Glucose'].min()) / (file['Glucose'].max() - file['Glucose'].min())
+    file['BloodPressure'] = (file['BloodPressure'] - file['BloodPressure'].min()) / (file['BloodPressure'].max() - file['BloodPressure'].min())
+    file['SkinThickness'] = (file['SkinThickness'] - file['SkinThickness'].min()) / (file['SkinThickness'].max() - file['SkinThickness'].min())
+    file['Insulin'] = (file['Insulin'] - file['Insulin'].min()) / (file['Insulin'].max() - file['Insulin'].min())
+    file['BMI'] = (file['BMI'] - file['BMI'].min()) / (file['BMI'].max() - file['BMI'].min())
+    file['DiabetesPedigreeFunction'] = (file['DiabetesPedigreeFunction'] - file['DiabetesPedigreeFunction'].min()) / (file['DiabetesPedigreeFunction'].max() - file['DiabetesPedigreeFunction'].min())
+    file['Age'] = (file['Age'] - file['Age'].min()) / (file['Age'].max() - file['Age'].min())
     return file
 #memecah data menjadi 2 bagian yaitu data training(80%) dan data testing(20%)
 def splitTrainTest(data):
@@ -87,16 +96,19 @@ def splitTrainTest(data):
     data5 = training, testing
     return data1, data2, data3, data4, data5
 #fungsi yang digunakan untuk menghitung jarak antara dua baris data
-def euclidian(baris1, baris2):
+def manhattan(baris1, baris2):
     jarak = 0
     for i in range(len(baris1) - 1):
-        jarak = jarak + ((baris1[i] - baris2[i]) ** 2)
-    return sqrt(jarak)
+        x = (baris1[i] - baris2[i])
+        if x < 0:
+            x = -(x)
+        jarak = jarak + x
+    return jarak
 #pencarian k data training terdekat dari suatu baris data test
 def getNeighbors(train, testRow, neighborsNum):
     distance = []
     for i in train:
-        x = euclidian(testRow,i)
+        x = manhattan(testRow, i)
         distance.append([i,x])
     distance.sort(key=lambda tup: tup[1])
     neighbors = []
@@ -138,14 +150,14 @@ def fiveFoldValidation(dataSet,k):
         score = []
         newOutput = getNewOutput(dataSet, k, i)
         accuracy = getAccuracyDataset(newOutput[0], newOutput[1])
-        # print("DataSet ke-", i ," dengan K= ", k , " memiliki akurasi sebesar " , accuracy)
+        print("DataSet ke-", i ," dengan K= ", k , " memiliki akurasi sebesar " , accuracy)
         score.append(accuracy)
     return score
 #Ultimately Main Function
 def main():
     data = readData()
     dataSet = splitTrainTest(data)
-    #best K 31 = 75.97402597402598
+    #best K 31 = 76.62337662337663
     newk = [31]
     for k in newk:
         score = fiveFoldValidation(dataSet, k)
