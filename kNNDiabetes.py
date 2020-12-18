@@ -3,6 +3,7 @@ from math import sqrt
 
 #melakukan read data Diabetes.csv dan memmasukkan kedalam array user
 def readData():
+    #file = pd.read_csv('Diabetes.csv')
     file = preProcess(pd.read_csv('Diabetes.csv'))
     user =[]
     for i in file.index:
@@ -146,8 +147,8 @@ def getNewOutput(dataSet, k, i):
     return oldOutput, newOutput
 #Main function untuk proses Five Fold Validation
 def fiveFoldValidation(dataSet,k):
+    score = []
     for i in range(len(dataSet)):
-        score = []
         newOutput = getNewOutput(dataSet, k, i)
         accuracy = getAccuracyDataset(newOutput[0], newOutput[1])
         print("DataSet ke-", i ," dengan K= ", k , " memiliki akurasi sebesar " , accuracy)
@@ -159,10 +160,15 @@ def getAvgAccuracy(score):
 def main():
     data = readData()
     dataSet = splitTrainTest(data)
-    #best K 31 = 76.62337662337663
-    newk = [31]
+    newk = [19]
+    #best = [0,0]
+    '''for i in range(300):
+        newk.append(i)'''
     for k in newk:
         score = fiveFoldValidation(dataSet, k)
         avg = getAvgAccuracy(score)
         print("Data dengan K =",k, "memiliki Rata-Rata acuracy sebesar", avg)
+        '''if avg > best[1]:
+            best = [k,avg]'''
+    #print(best)
 main()
